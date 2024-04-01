@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { RiEyeCloseLine, RiEyeLine } from "react-icons/ri";
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -8,18 +9,27 @@ function Register() {
     confirmPassword: "",
   });
   const [errors, setErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+
   const handleFormSubmit = (event) => {
-    event.preventDefault(); // Prevent default form submission behavior
+    event.preventDefault();
 
     const { name, email, password, confirmPassword } = formData;
 
-    // Validate form fields
     const errors = {};
     if (!name) {
       errors.name = "Please enter your name.";
@@ -37,10 +47,8 @@ function Register() {
     }
 
     if (Object.keys(errors).length === 0) {
-      // Form validation successful, perform actions (e.g., submit data)
-      alert(`Form submitted successfully! (This is just a simulation)`); // Replace with actual submission logic
+      alert(`Form submitted successfully! (This is just a simulation)`);
     } else {
-      // Set errors state to display error messages
       setErrors(errors);
     }
   };
@@ -50,20 +58,72 @@ function Register() {
       <form onSubmit={handleFormSubmit}>
         <h1>Create Account</h1>
         <span>or use your email for registration</span>
-        <input type="text" placeholder="Name" name="name" value={formData.name} onChange={handleChange} />
-        {errors.name && <p className="error">{errors.name}</p>}
-        <input type="email" placeholder="Email" name="email" value={formData.email} onChange={handleChange} />
-        {errors.email && <p className="error">{errors.email}</p>}
-        <input type="password" placeholder="Password" name="password" value={formData.password} onChange={handleChange} />
-        {errors.password && <p className="error">{errors.password}</p>}
         <input
-          type="password"
-          placeholder="Confirm Password"
-          name="confirmPassword"
-          value={formData.confirmPassword}
+          type="text"
+          placeholder="Name"
+          name="name"
+          value={formData.name}
           onChange={handleChange}
+          className={errors.name ? "error" : ""}
         />
-        {errors.confirmPassword && <p className="error">{errors.confirmPassword}</p>}
+        {errors.name && <p className="error-message">{errors.name}</p>}
+        <input
+          type="email"
+          placeholder="Email"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+          className={errors.email ? "error" : ""}
+        />
+        {errors.email && <p className="error-message">{errors.email}</p>}
+        <div className="pwStyle" style={{ position: "relative" }}>
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder="Password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            className={errors.email ? "error" : ""}
+          />
+          <span
+            style={{
+              position: "absolute",
+              right: "10px",
+              top: "50%",
+              transform: "translateY(-50%)",
+              cursor: "pointer",
+            }}
+            onClick={togglePasswordVisibility}
+          >
+            {showPassword ? <RiEyeLine /> : <RiEyeCloseLine />}
+          </span>
+        </div>
+        {errors.password && <p className="error-message">{errors.password}</p>}
+        <div className="pwStyle" style={{ position: "relative" }}>
+          <input
+            type={showConfirmPassword ? "text" : "password"}
+            placeholder="Confirm Password"
+            name="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            className={errors.confirmPassword ? "error" : ""}
+          />
+          <span
+            style={{
+              position: "absolute",
+              right: "10px",
+              top: "50%",
+              transform: "translateY(-50%)",
+              cursor: "pointer",
+            }}
+            onClick={toggleConfirmPasswordVisibility}
+          >
+            {showConfirmPassword ? <RiEyeLine /> : <RiEyeCloseLine />}
+          </span>
+        </div>
+        {errors.confirmPassword && (
+          <p className="error-message">{errors.confirmPassword}</p>
+        )}
         <button type="submit">Sign Up</button>
       </form>
     </div>

@@ -1,23 +1,27 @@
 import React, { useState } from "react";
-
+import { RiEyeCloseLine, RiEyeLine } from "react-icons/ri";
 function Login() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
   const [errors, setErrors] = useState({});
-
+  const [showPassword, setShowPassword] = useState(false);
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
+
+    setErrors({ ...errors, [name]: "" });
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   const handleFormSubmit = (event) => {
-    event.preventDefault(); // Prevent default form submission behavior
-
+    event.preventDefault();
     const { email, password } = formData;
 
-    // Validate form fields
     const errors = {};
     if (!email) {
       errors.email = "Please enter your email address.";
@@ -29,10 +33,8 @@ function Login() {
     }
 
     if (Object.keys(errors).length === 0) {
-      // Form validation successful, perform actions (e.g., submit data)
-      alert(`Form submitted successfully! (This is just a simulation)`); // Replace with actual submission logic
+      alert(`Form submitted successfully! (This is just a simulation)`);
     } else {
-      // Set errors state to display error messages
       setErrors(errors);
     }
   };
@@ -42,10 +44,38 @@ function Login() {
       <form onSubmit={handleFormSubmit}>
         <h1>Sign In</h1>
         <span>or use your email and password</span>
-        <input type="email" placeholder="Email" name="email" value={formData.email} onChange={handleChange} />
-        {errors.email && <p className="error">{errors.email}</p>}
-        <input type="password" placeholder="Password" name="password" value={formData.password} onChange={handleChange} />
-        {errors.password && <p className="error">{errors.password}</p>}
+        <input
+          type="email"
+          placeholder="Email"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+          className={errors.email ? "error" : ""}
+        />
+        {errors.email && <p className="error-message">{errors.email}</p>}
+        <div className="pwStyle" style={{ position: "relative" }}>
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder="Password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            className={errors.password ? "error" : ""}
+          />
+          <span
+            style={{
+              position: "absolute",
+              right: "10px",
+              top: "50%",
+              transform: "translateY(-50%)",
+              cursor: "pointer",
+            }}
+            onClick={togglePasswordVisibility}
+          >
+            {showPassword ? <RiEyeLine /> : <RiEyeCloseLine />}
+          </span>
+        </div>
+        {errors.password && <p className="error-message">{errors.password}</p>}
         <a href="#">Forget Your Password?</a>
         <button type="submit">Sign In</button>
       </form>
